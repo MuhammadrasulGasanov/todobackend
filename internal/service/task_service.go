@@ -51,8 +51,14 @@ func (s *TaskService) UpdateTask(ctx context.Context, task *models.Task) error {
 }
 
 func (s *TaskService) DeleteTask(ctx context.Context, taskID int, userID int) error {
-	query := `DELETE FROM tasks WHERE taskID = $1 AND userID = $2`
+	query := `DELETE FROM tasks WHERE id = $1 AND user_id = $2`
 	_, err := s.DB.ExecContext(ctx, query, taskID, userID)
+	return err
+}
+
+func (s *TaskService) MarkTaskCompletion(ctx context.Context, taskID int, userID int, completed bool) error {
+	query := `UPDATE tasks SET completed = $1 WHERE id = $2 AND user_id = $3`
+	_, err := s.DB.ExecContext(ctx, query, completed, taskID, userID)
 	return err
 }
 

@@ -42,7 +42,6 @@ func main() {
 	//Router
 	r := chi.NewRouter()
 
-
 	r.Get("/health", func(w http.ResponseWriter, r *http.Request) {
 		if err := db.Ping(); err != nil {
 			http.Error(w, "DB not reachable", http.StatusInternalServerError)
@@ -64,6 +63,7 @@ func main() {
 		r.Get("/tasks", taskHandler.GetTasks)
 		r.Put("/tasks/{id}", taskHandler.UpdateTask)
 		r.Delete("/tasks/{id}", taskHandler.DeleteTask)
+		r.Patch("/tasks/{id}", taskHandler.MarkTaskCompletion)
 	})
 
 	log.Printf("Server is running on %s\n", cfg.ServerPort)

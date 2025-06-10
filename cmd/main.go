@@ -38,6 +38,8 @@ func main() {
 	authHandler := handler.NewAuthHandler(authService)
 	taskService := service.NewTaskService(db)
 	taskHandler := handler.NewTaskHandler(taskService)
+	categoryService := service.NewCategoryService(db)
+	categoryHandler := handler.NewCategoryHandler(categoryService)
 
 	//Router
 	r := chi.NewRouter()
@@ -64,6 +66,11 @@ func main() {
 		r.Put("/tasks/{id}", taskHandler.UpdateTask)
 		r.Delete("/tasks/{id}", taskHandler.DeleteTask)
 		r.Patch("/tasks/{id}", taskHandler.MarkTaskCompletion)
+		// Category routes
+		r.Post("/categories", categoryHandler.CreateCategory)
+		r.Get("/categories", categoryHandler.GetCategories)
+		r.Get("/categories/{id}", categoryHandler.GetCategoryById)
+		r.Delete("/categories/{id}", categoryHandler.DeleteCategory)
 	})
 
 	log.Printf("Server is running on %s\n", cfg.ServerPort)

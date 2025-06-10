@@ -3,6 +3,7 @@ package service
 import (
 	"context"
 	"database/sql"
+
 	"github.com/MuhammadrasulGasanov/go-tasks/internal/models"
 )
 
@@ -22,11 +23,19 @@ func (s *TaskService) CreateTask(ctx context.Context, task *models.Task) error {
 	return err
 }
 
-func (s *TaskService) GetTasksByUser(ctx context.Context, userID int) ([]*models.Task, error) {
+func (s *TaskService) GetTasksByUser(ctx context.Context, userID int, categoryID *int) ([]*models.Task, error) {
 	query := `SELECT id, user_id, title, description, category_id, completed, created_at, due_date
-	FROM tasks WHERE user_id = $1 ORDER BY created_at DESC`
+        FROM tasks WHERE user_id = $1`
+	args := []any{userID}
 
-	rows, err := s.DB.QueryContext(ctx, query, userID)
+	if categoryID != nil {
+		query += " AND category_id = $2"
+		args = append(args, *categoryID)
+	}
+
+	query += " ORDER BY created_at DESC"
+
+	rows, err := s.DB.QueryContext(ctx, query, args...)
 	if err != nil {
 		return nil, err
 	}

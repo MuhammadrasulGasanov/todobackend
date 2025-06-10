@@ -82,7 +82,18 @@ func (h *TaskHandler) GetTasks(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	tasks, err := h.Service.GetTasksByUser(r.Context(), userID)
+	categoryIDStr := r.URL.Query().Get("category_id")
+	var categoryID *int
+	if categoryIDStr != "" {
+		id, err := strconv.Atoi(categoryIDStr)
+		if err != nil {
+			http.Error(w, "invalid category_id", http.StatusBadRequest)
+			return
+		}
+		categoryID = &id
+	}
+
+	tasks, err := h.Service.GetTasksByUser(r.Context(), userID, categoryID)
 	if err != nil {
 		http.Error(w, "could not get tasks", http.StatusInternalServerError)
 		return

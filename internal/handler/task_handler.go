@@ -30,6 +30,7 @@ func (h *TaskHandler) CreateTask(w http.ResponseWriter, r *http.Request) {
 	var input struct {
 		Title       string  `json:"title"`
 		Description *string `json:"description"`
+		CategoryID  *int    `json:"category_id"`
 		DueDate     *string `json:"due_date"`
 	}
 	if err := json.NewDecoder(r.Body).Decode(&input); err != nil {
@@ -61,6 +62,7 @@ func (h *TaskHandler) CreateTask(w http.ResponseWriter, r *http.Request) {
 		UserID:      userID,
 		Title:       input.Title,
 		Description: input.Description,
+		CategoryID:  input.CategoryID,
 		DueDate:     dueDate,
 		Completed:   false,
 	}
@@ -106,6 +108,7 @@ func (h *TaskHandler) UpdateTask(w http.ResponseWriter, r *http.Request) {
 	var input struct {
 		Title       string  `json:"title"`
 		Description *string `json:"description"`
+		CategoryID  *int    `json:"category_id"`
 		DueDate     *string `json:"due_date"`
 		Completed   bool    `json:"completed"`
 	}
@@ -140,6 +143,7 @@ func (h *TaskHandler) UpdateTask(w http.ResponseWriter, r *http.Request) {
 		UserID:      userID,
 		Title:       input.Title,
 		Description: input.Description,
+		CategoryID:  input.CategoryID,
 		DueDate:     dueDate,
 		Completed:   input.Completed,
 	}
